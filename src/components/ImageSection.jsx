@@ -14,7 +14,12 @@ const ImageSection = () => {
       <div className="hero-content">
         <h1 className="hero-title">La tua nuova auto: a pochi click</h1>
 
-        <button className="hero-btn">Scopri le auto</button>
+        <button
+          className="hero-btn"
+          onClick={() => (window.location.href = "/allCars")}
+        >
+          Scopri le auto
+        </button>
       </div>
     </section>
   );

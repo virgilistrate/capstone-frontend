@@ -94,3 +94,247 @@
   transform: translateY(-6px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
 }
+
+/*   SEARCH BAR    */
+
+.searchbar-wrapper {
+  background: transparent;
+}
+
+.searchbar-box {
+  max-width: 70vw;
+  min-width: 280px;
+}
+
+.searchbar-icon {
+  background-color: #dff4ff;
+  border: 1px solid #b6e3ff;
+  border-right: none;
+  color: #2c7fb8;
+  border-radius: 16px 0 0 16px;
+  padding: 0 18px;
+}
+
+.searchbar-input {
+  height: 56px;
+  border: 1px solid #b6e3ff;
+  border-left: none;
+  border-radius: 0 16px 16px 0;
+  background-color: #eef9ff;
+  font-size: 1rem;
+  box-shadow: 0 4px 14px rgba(100, 180, 255, 0.15);
+}
+
+.searchbar-input:focus {
+  background-color: #ffffff;
+  border-color: #86d0ff;
+  box-shadow: 0 0 0 0.2rem rgba(134, 208, 255, 0.25);
+}
+
+.searchbar-input::placeholder {
+  color: #6aaed6;
+}
+
+/*  VEHICLE CARDS  */
+
+.vehicle-cards-container {
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+.vehicle-cards-row {
+  align-items: stretch;
+}
+
+.vehicle-card {
+  border-radius: 18px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 8px 20px rgba(72, 137, 199, 0.1);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.vehicle-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px rgba(72, 137, 199, 0.16);
+}
+
+.vehicle-image-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.vehicle-card-img {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+  display: block;
+  background: #eef6fb;
+}
+
+.vehicle-carousel .carousel-inner {
+  border-radius: 0;
+}
+
+.vehicle-carousel .carousel-control-prev,
+.vehicle-carousel .carousel-control-next {
+  width: 12%;
+  opacity: 1;
+}
+
+.vehicle-carousel .carousel-control-prev-icon,
+.vehicle-carousel .carousel-control-next-icon {
+  background-color: rgba(31, 136, 255, 0.9);
+  border-radius: 50%;
+  padding: 16px;
+  background-size: 55%;
+}
+
+.vehicle-badge-image {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background-color: rgba(31, 136, 255, 0.95) !important;
+  color: #ffffff !important;
+  border: none;
+  font-weight: 600;
+  border-radius: 999px;
+  padding: 0.45rem 0.85rem;
+  font-size: 0.82rem;
+  z-index: 5;
+}
+
+.vehicle-card-body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.vehicle-header-block {
+  min-height: 52px;
+}
+
+.vehicle-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #244765;
+  line-height: 1.15;
+}
+
+.vehicle-location {
+  color: #6d8da8;
+  font-size: 0.85rem;
+}
+
+.price-box {
+  background: linear-gradient(180deg, #f3fbff 0%, #ebf7ff 100%);
+  border: 1px solid #d8efff;
+  border-radius: 16px;
+  padding: 14px 16px;
+}
+
+.price-label {
+  display: block;
+  font-size: 0.75rem;
+  color: #6d8da8;
+  margin-bottom: 2px;
+}
+
+.price-value {
+  color: #1785d6;
+  font-weight: 700;
+  font-size: 1.55rem;
+  line-height: 1.1;
+}
+
+.vehicle-info-grid {
+  margin-top: 0;
+}
+
+.info-box {
+  background: #f9fcff;
+  border: 1px solid #e2f1ff;
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 78px;
+  height: 100%;
+}
+
+.info-label {
+  font-size: 0.72rem;
+  color: #7d99b1;
+  margin-bottom: 4px;
+}
+
+.info-value {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #244765;
+  line-height: 1.2;
+}
+
+@media (max-width: 991px) {
+  .vehicle-cards-container {
+    max-width: 100%;
+  }
+
+  .vehicle-card-img {
+    height: 280px;
+  }
+
+  .vehicle-title {
+    font-size: 1.1rem;
+  }
+
+  .price-value {
+    font-size: 1.35rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .vehicle-cards-container {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+
+  .vehicle-card-img {
+    height: 250px;
+  }
+
+  .vehicle-card-body {
+    padding: 0.9rem;
+    gap: 12px;
+  }
+
+  .vehicle-title {
+    font-size: 1rem;
+  }
+
+  .vehicle-location {
+    font-size: 0.8rem;
+  }
+
+  .price-value {
+    font-size: 1.2rem;
+  }
+
+  .info-box {
+    min-height: 72px;
+    padding: 10px 12px;
+  }
+
+  .info-label {
+    font-size: 0.68rem;
+  }
+
+  .info-value {
+    font-size: 0.82rem;
+  }
+}

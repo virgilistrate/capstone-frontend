@@ -4,6 +4,9 @@ import { Container, Row, Col, Card } from "react-bootstrap";
 function CarsByCategoryPage() {
   const { categoryName } = useParams();
 
+  {
+    /* TEST PER VEDERE LE AUTO */
+  }
   const cars = [
     {
       id: 1,
