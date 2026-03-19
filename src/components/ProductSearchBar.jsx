@@ -6,14 +6,14 @@ const ProductSearchBar = ({ searchTerm, setSearchTerm }) => {
     <div className="searchbar-wrapper py-4">
       <Container className="d-flex justify-content-center">
         <div className="searchbar-box w-100">
-          <InputGroup>
+          <InputGroup className="searchbar-group">
             <InputGroup.Text className="searchbar-icon">
               <Search />
             </InputGroup.Text>
 
             <Form.Control
               type="text"
-              placeholder="Cerca un prodotto..."
+              placeholder="Cerca marca, modello, targa..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="searchbar-input"

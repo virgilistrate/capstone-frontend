@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   Row,
   Col,
@@ -9,33 +8,7 @@ import {
   Carousel,
 } from "react-bootstrap";
 
-function VehicleCards() {
-  const [vehicles, setVehicles] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    const fetchVehicles = async () => {
-      try {
-        const response = await fetch("http://localhost:3003/vehicles");
-
-        if (!response.ok) {
-          throw new Error("Errore nel recupero veicoli");
-        }
-
-        const data = await response.json();
-        setVehicles(data);
-      } catch (err) {
-        console.error(err);
-        setError("Non sono riuscito a caricare i veicoli.");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchVehicles();
-  }, []);
-
+function VehicleCards({ vehicles, loading, error }) {
   if (loading) {
     return (
       <div className="text-center py-5">
@@ -100,10 +73,6 @@ function VehicleCards() {
                       </Carousel.Item>
                     ))}
                   </Carousel>
-
-                  <Badge className="vehicle-badge-image">
-                    {vehicle.fuelType || "N/D"}
-                  </Badge>
                 </div>
 
                 <Card.Body className="vehicle-card-body">
@@ -142,9 +111,9 @@ function VehicleCards() {
 
                     <Col xs={6}>
                       <div className="info-box">
-                        <span className="info-label">Prezzo</span>
+                        <span className="info-label">Classe di Emissione</span>
                         <span className="info-value">
-                          € {vehicle.price?.toLocaleString("it-IT")}
+                          {vehicle.emissionsClass?.toLocaleString("it-IT")}
                         </span>
                       </div>
                     </Col>

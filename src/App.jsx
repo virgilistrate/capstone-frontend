@@ -3,6 +3,7 @@ import HomePage from "./pages/HomePage";
 import CarsByCategoryPage from "./pages/CarsByCategoryPage";
 import CarsByBrandPage from "./pages/CarsByBrandPage";
 import AllCarsPage from "./pages/AllCarsPage";
+import AdminCreateVehiclePage from "./pages/AdminCreateVehiclePage";
 
 function App() {
   return (
@@ -11,6 +12,10 @@ function App() {
       <Route path="/allCars" element={<AllCarsPage />} />
       <Route path="/categoria/:categoryName" element={<CarsByCategoryPage />} />
       <Route path="/marca/:brandName" element={<CarsByBrandPage />} />
+      <Route
+        path="/admin/create-vehicle"
+        element={<AdminCreateVehiclePage />}
+      />
     </Routes>
   );
 }
