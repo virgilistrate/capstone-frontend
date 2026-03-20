@@ -30,7 +30,7 @@ function MainNavbar() {
         <Navbar.Collapse id="navbarScroll">
           <Nav className="me-auto ">
             <Nav.Link href="/">Home</Nav.Link>
-            <Nav.Link href="/allCars">Tutte le Auto</Nav.Link>
+            <Nav.Link href="/Cars">Tutte le Auto</Nav.Link>
             <NavDropdown title="Menu" id="navbarScrollingDropdown">
               <NavDropdown.Item href="#action1">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action2">

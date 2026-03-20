@@ -7,6 +7,7 @@ import {
   Container,
   Carousel,
 } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 function VehicleCards({ vehicles, loading, error }) {
   if (loading) {
@@ -52,83 +53,89 @@ function VehicleCards({ vehicles, loading, error }) {
 
           return (
             <Col key={vehicle.id} xs={12} md={6} lg={6}>
-              <Card className="vehicle-card h-100 border-0">
-                <div className="vehicle-image-wrapper">
-                  <Carousel
-                    interval={null}
-                    indicators={false}
-                    controls={hasMultipleImages}
-                    touch={hasMultipleImages}
-                    slide={hasMultipleImages}
-                    className="vehicle-carousel"
-                  >
-                    {images.map((img, index) => (
-                      <Carousel.Item key={index}>
-                        <Card.Img
-                          variant="top"
-                          src={img.imageUrl}
-                          alt={img.description || "Immagine veicolo"}
-                          className="vehicle-card-img"
-                        />
-                      </Carousel.Item>
-                    ))}
-                  </Carousel>
-                </div>
+              <Link to={`/cars/${vehicle.id}`} className="vehicle-card-link">
+                <Card className="vehicle-card h-100 border-0">
+                  <div className="vehicle-image-wrapper">
+                    <Carousel
+                      interval={null}
+                      indicators={false}
+                      controls={hasMultipleImages}
+                      touch={hasMultipleImages}
+                      slide={hasMultipleImages}
+                      className="vehicle-carousel"
+                    >
+                      {images.map((img, index) => (
+                        <Carousel.Item key={index}>
+                          <Card.Img
+                            variant="top"
+                            src={img.imageUrl}
+                            alt={img.description || "Immagine veicolo"}
+                            className="vehicle-card-img"
+                          />
+                        </Carousel.Item>
+                      ))}
+                    </Carousel>
 
-                <Card.Body className="vehicle-card-body">
-                  <div className="vehicle-header-block">
-                    <h4 className="vehicle-title mb-1">
-                      {vehicle.brand?.name || "Brand"}{" "}
-                      {vehicle.model?.name || "Model"}
-                    </h4>
+                    <Badge className="vehicle-badge-image">
+                      {vehicle.fuelType || "N/D"}
+                    </Badge>
                   </div>
 
-                  <div className="price-box">
-                    <span className="price-label">Prezzo</span>
-                    <h3 className="price-value mb-0">
-                      € {vehicle.price?.toLocaleString("it-IT")}
-                    </h3>
-                  </div>
+                  <Card.Body className="vehicle-card-body">
+                    <div className="vehicle-header-block">
+                      <h4 className="vehicle-title mb-1">
+                        {vehicle.brand?.name || "Brand"}{" "}
+                        {vehicle.model?.name || "Model"}
+                      </h4>
+                    </div>
 
-                  <Row className="g-2 vehicle-info-grid">
-                    <Col xs={6}>
-                      <div className="info-box">
-                        <span className="info-label">Anno</span>
-                        <span className="info-value">
-                          {vehicle.yearOfConstruction}
-                        </span>
-                      </div>
-                    </Col>
+                    <div className="price-box">
+                      <span className="price-label">Prezzo</span>
+                      <h3 className="price-value mb-0">
+                        € {vehicle.price?.toLocaleString("it-IT")}
+                      </h3>
+                    </div>
 
-                    <Col xs={6}>
-                      <div className="info-box">
-                        <span className="info-label">Chilometri</span>
-                        <span className="info-value">
-                          {vehicle.kilometers?.toLocaleString("it-IT")} km
-                        </span>
-                      </div>
-                    </Col>
+                    <Row className="g-2 vehicle-info-grid">
+                      <Col xs={6}>
+                        <div className="info-box">
+                          <span className="info-label">Anno</span>
+                          <span className="info-value">
+                            {vehicle.yearOfConstruction}
+                          </span>
+                        </div>
+                      </Col>
 
-                    <Col xs={6}>
-                      <div className="info-box">
-                        <span className="info-label">Classe di Emissione</span>
-                        <span className="info-value">
-                          {vehicle.emissionsClass?.toLocaleString("it-IT")}
-                        </span>
-                      </div>
-                    </Col>
+                      <Col xs={6}>
+                        <div className="info-box">
+                          <span className="info-label">Chilometri</span>
+                          <span className="info-value">
+                            {vehicle.kilometers?.toLocaleString("it-IT")} km
+                          </span>
+                        </div>
+                      </Col>
 
-                    <Col xs={6}>
-                      <div className="info-box">
-                        <span className="info-label">Alimentazione</span>
-                        <span className="info-value">
-                          {vehicle.fuelType || "N/D"}
-                        </span>
-                      </div>
-                    </Col>
-                  </Row>
-                </Card.Body>
-              </Card>
+                      <Col xs={6}>
+                        <div className="info-box">
+                          <span className="info-label">Prezzo</span>
+                          <span className="info-value">
+                            € {vehicle.price?.toLocaleString("it-IT")}
+                          </span>
+                        </div>
+                      </Col>
+
+                      <Col xs={6}>
+                        <div className="info-box">
+                          <span className="info-label">Alimentazione</span>
+                          <span className="info-value">
+                            {vehicle.fuelType || "N/D"}
+                          </span>
+                        </div>
+                      </Col>
+                    </Row>
+                  </Card.Body>
+                </Card>
+              </Link>
             </Col>
           );
         })}
