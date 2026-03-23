@@ -75,10 +75,6 @@ function VehicleCards({ vehicles, loading, error }) {
                         </Carousel.Item>
                       ))}
                     </Carousel>
-
-                    <Badge className="vehicle-badge-image">
-                      {vehicle.fuelType || "N/D"}
-                    </Badge>
                   </div>
 
                   <Card.Body className="vehicle-card-body">

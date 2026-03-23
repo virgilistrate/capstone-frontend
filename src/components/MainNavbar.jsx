@@ -12,7 +12,7 @@ function MainNavbar() {
         className="justify-content-start d-flex aling.items-start 
     "
       >
-        <Navbar.Brand href="#" className="me-auto ms-auto ">
+        <Navbar.Brand href="/" className="me-auto ms-auto ">
           <svg width="180" viewBox="0 0 340 60">
             <text
               x="0"
@@ -42,16 +42,6 @@ function MainNavbar() {
               </NavDropdown.Item>
             </NavDropdown>
           </Nav>
-
-          <Form className="d-flex">
-            <Form.Control
-              type="search"
-              placeholder="Search"
-              className="me-2"
-              aria-label="Search"
-            />
-            <Button variant="outline-success">Search</Button>
-          </Form>
         </Navbar.Collapse>
       </Container>
     </Navbar>
