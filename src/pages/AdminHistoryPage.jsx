@@ -13,24 +13,43 @@ import MainNavbar from "../components/MainNavbar";
 export default function AdminHistoryPage() {
   const [soldVehicles, setSoldVehicles] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [finanziamenti, setFinanziamenti] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
+      setErrorMessage("");
+
       try {
-        const [vehiclesRes, ordersRes] = await Promise.all([
+        const [vehiclesRes, ordersRes, finanziamentiRes] = await Promise.all([
           fetch("http://localhost:3003/vehicles"),
           fetch("http://localhost:3003/orders"),
+          fetch("http://localhost:3003/finanziamenti"),
         ]);
+
+        if (!vehiclesRes.ok) {
+          throw new Error("Errore nel caricamento veicoli");
+        }
+
+        if (!ordersRes.ok) {
+          throw new Error("Errore nel caricamento ordini");
+        }
+
+        if (!finanziamentiRes.ok) {
+          throw new Error("Errore nel caricamento finanziamenti");
+        }
 
         const vehiclesData = await vehiclesRes.json();
         const ordersData = await ordersRes.json();
+        const finanziamentiData = await finanziamentiRes.json();
 
         setSoldVehicles(
           vehiclesData.filter((vehicle) => vehicle.sold === true),
         );
         setOrders(ordersData);
+        setFinanziamenti(finanziamentiData);
       } catch (error) {
         console.error(error);
         setErrorMessage("Errore nel caricamento dello storico.");
@@ -59,16 +78,16 @@ export default function AdminHistoryPage() {
 
       <Container className="py-5">
         <div className="mb-4 text-center">
-          <h1 className="fw-bold">Storico ordini e finanziamenti</h1>
+          <h1 className="fw-bold">Storico admin</h1>
           <p className="text-muted mb-0">
-            Consulta veicoli venduti, ordini passati e pratiche finanziarie.
+            Consulta veicoli venduti, ordini e finanziamenti.
           </p>
         </div>
 
         {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
 
         <Row className="g-4">
-          <Col xs={12} lg={6}>
+          <Col xs={12} lg={4}>
             <Card className="border-0 shadow-sm rounded-4 h-100">
               <Card.Body>
                 <h4 className="mb-3">Veicoli venduti</h4>
@@ -84,8 +103,13 @@ export default function AdminHistoryPage() {
                         </strong>
                         <Badge bg="danger">Venduta</Badge>
                       </div>
-                      <div className="text-muted">{vehicle.plateNumber}</div>
-                      <div>€ {vehicle.price?.toLocaleString("it-IT")}</div>
+                      <div className="text-muted">
+                        Targa: {vehicle.plateNumber || "N/D"}
+                      </div>
+                      <div>
+                        Prezzo: €{" "}
+                        {vehicle.price?.toLocaleString("it-IT") || "N/D"}
+                      </div>
                     </div>
                   ))
                 )}
@@ -93,10 +117,10 @@ export default function AdminHistoryPage() {
             </Card>
           </Col>
 
-          <Col xs={12} lg={6}>
+          <Col xs={12} lg={4}>
             <Card className="border-0 shadow-sm rounded-4 h-100">
               <Card.Body>
-                <h4 className="mb-3">Ordini / finanziamenti</h4>
+                <h4 className="mb-3">Ordini</h4>
 
                 {orders.length === 0 ? (
                   <p className="text-muted mb-0">Nessun ordine presente.</p>
@@ -104,14 +128,62 @@ export default function AdminHistoryPage() {
                   orders.map((order) => (
                     <div key={order.id} className="mb-3 pb-3 border-bottom">
                       <strong>Ordine #{order.id}</strong>
+
                       <div className="text-muted">
-                        {order.vehicle?.brand?.name}{" "}
-                        {order.vehicle?.model?.name}
+                        Data: {order.date || "N/D"}
                       </div>
-                      <div>Cliente: {order.customerName || "N/D"}</div>
+
                       <div>
-                        Totale: €{" "}
-                        {order.totalAmount?.toLocaleString("it-IT") || "N/D"}
+                        Veicolo: {order.vehicle?.brand?.name || ""}{" "}
+                        {order.vehicle?.model?.name || ""}
+                      </div>
+
+                      <div>
+                        Cliente: {order.client?.user?.name || "N/D"}{" "}
+                        {order.client?.user?.surname || ""}
+                      </div>
+
+                      <div>
+                        Consulente: {order.consulente?.user?.name || "N/D"}{" "}
+                        {order.consulente?.user?.surname || ""}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </Card.Body>
+            </Card>
+          </Col>
+
+          <Col xs={12} lg={4}>
+            <Card className="border-0 shadow-sm rounded-4 h-100">
+              <Card.Body>
+                <h4 className="mb-3">Finanziamenti</h4>
+
+                {finanziamenti.length === 0 ? (
+                  <p className="text-muted mb-0">
+                    Nessun finanziamento presente.
+                  </p>
+                ) : (
+                  finanziamenti.map((fin) => (
+                    <div key={fin.id} className="mb-3 pb-3 border-bottom">
+                      <strong>Finanziamento #{fin.id}</strong>
+
+                      <div>
+                        Importo: €{" "}
+                        {fin.amount?.toLocaleString("it-IT") || "N/D"}
+                      </div>
+
+                      <div>Rate: {fin.numberOfRates || "N/D"}</div>
+
+                      <div>Rata mensile: € {fin.monthlyRate || "N/D"}</div>
+
+                      <div className="text-muted">
+                        Ordine collegato: #{fin.order?.id || "N/D"}
+                      </div>
+
+                      <div>
+                        Veicolo: {fin.order?.vehicle?.brand?.name || ""}{" "}
+                        {fin.order?.vehicle?.model?.name || ""}
                       </div>
                     </div>
                   ))

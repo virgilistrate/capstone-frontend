@@ -260,7 +260,7 @@ const CarDetailPage = () => {
                 <h4 className="mb-3">Informazioni principali</h4>
 
                 <Row className="g-3">
-                  <Col xs={12} md={6} lg={3}>
+                  <Col xs={6} md={6} lg={3}>
                     <div className="car-detail-info-box">
                       <span className="car-detail-info-label">Anno</span>
                       <span className="car-detail-info-value">
@@ -269,7 +269,7 @@ const CarDetailPage = () => {
                     </div>
                   </Col>
 
-                  <Col xs={12} md={6} lg={3}>
+                  <Col xs={6} md={6} lg={3}>
                     <div className="car-detail-info-box">
                       <span className="car-detail-info-label">Chilometri</span>
                       <span className="car-detail-info-value">
@@ -278,7 +278,7 @@ const CarDetailPage = () => {
                     </div>
                   </Col>
 
-                  <Col xs={12} md={6} lg={3}>
+                  <Col xs={6} md={6} lg={3}>
                     <div className="car-detail-info-box">
                       <span className="car-detail-info-label">
                         Alimentazione
@@ -289,14 +289,14 @@ const CarDetailPage = () => {
                     </div>
                   </Col>
 
-                  <Col xs={12} md={6} lg={3}>
+                  <Col xs={6} md={6} lg={3}>
                     <div className="car-detail-info-box">
                       <span className="car-detail-info-label">Colore</span>
                       <span className="car-detail-info-value">{car.color}</span>
                     </div>
                   </Col>
 
-                  <Col xs={12} md={6} lg={3}>
+                  <Col xs={6} md={6} lg={3}>
                     <div className="car-detail-info-box">
                       <span className="car-detail-info-label">Trazione</span>
                       <span className="car-detail-info-value">
@@ -305,23 +305,7 @@ const CarDetailPage = () => {
                     </div>
                   </Col>
 
-                  <Col xs={12} md={6} lg={3}>
-                    <div className="car-detail-info-box">
-                      <span className="car-detail-info-label">Porte</span>
-                      <span className="car-detail-info-value">
-                        {car.doorsNumber}
-                      </span>
-                    </div>
-                  </Col>
-
-                  <Col xs={12} md={6} lg={3}>
-                    <div className="car-detail-info-box">
-                      <span className="car-detail-info-label">Posti</span>
-                      <span className="car-detail-info-value">{car.seats}</span>
-                    </div>
-                  </Col>
-
-                  <Col xs={12} md={6} lg={3}>
+                  <Col xs={6} md={6} lg={3}>
                     <div className="car-detail-info-box">
                       <span className="car-detail-info-label">Potenza</span>
                       <span className="car-detail-info-value">
@@ -330,16 +314,7 @@ const CarDetailPage = () => {
                     </div>
                   </Col>
 
-                  <Col xs={12} md={6} lg={3}>
-                    <div className="car-detail-info-box">
-                      <span className="car-detail-info-label">Cilindrata</span>
-                      <span className="car-detail-info-value">
-                        {car.engineCapacity}
-                      </span>
-                    </div>
-                  </Col>
-
-                  <Col xs={12} md={6} lg={3}>
+                  <Col xs={6} md={6} lg={3}>
                     <div className="car-detail-info-box">
                       <span className="car-detail-info-label">Consumo</span>
                       <span className="car-detail-info-value">
@@ -348,22 +323,13 @@ const CarDetailPage = () => {
                     </div>
                   </Col>
 
-                  <Col xs={12} md={6} lg={3}>
+                  <Col xs={6} md={6} lg={3}>
                     <div className="car-detail-info-box">
                       <span className="car-detail-info-label">
                         Classe emissioni
                       </span>
                       <span className="car-detail-info-value">
                         {car.emissionsClass}
-                      </span>
-                    </div>
-                  </Col>
-
-                  <Col xs={12} md={6} lg={3}>
-                    <div className="car-detail-info-box">
-                      <span className="car-detail-info-label">CO2</span>
-                      <span className="car-detail-info-value">
-                        {car.co2Emissions}
                       </span>
                     </div>
                   </Col>
@@ -378,10 +344,56 @@ const CarDetailPage = () => {
           <Col xs={12}>
             <Card className="border-0 shadow-sm rounded-4">
               <Card.Body>
-                <h4 className="mb-3">Dettagli tecnici</h4>
+                <h4 className="mb-3 ">Dettagli tecnici</h4>
+                <Row className="g-3">
+                  <Col xs={6} md={6} lg={3}>
+                    <div className="car-detail-info-box">
+                      <span className="car-detail-info-label">Porte</span>
+                      <span className="car-detail-info-value">
+                        {car.doorsNumber}
+                      </span>
+                    </div>
+                  </Col>
+
+                  <Col xs={6} md={6} lg={3}>
+                    <div className="car-detail-info-box">
+                      <span className="car-detail-info-label">Posti</span>
+                      <span className="car-detail-info-value">{car.seats}</span>
+                    </div>
+                  </Col>
+
+                  <Col xs={6} md={6} lg={3}>
+                    <div className="car-detail-info-box">
+                      <span className="car-detail-info-label">Cilindrata</span>
+                      <span className="car-detail-info-value">
+                        {car.engineCapacity}
+                      </span>
+                    </div>
+                  </Col>
+
+                  <Col xs={6} md={6} lg={3}>
+                    <div className="car-detail-info-box">
+                      <span className="car-detail-info-label">CO2</span>
+                      <span className="car-detail-info-value">
+                        {car.co2Emissions}
+                      </span>
+                    </div>
+                  </Col>
+                </Row>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+
+        {/* DIMENSIONI */}
+        <Row className="mt-4">
+          <Col xs={12}>
+            <Card className="border-0 shadow-sm rounded-4">
+              <Card.Body>
+                <h4 className="mb-3">Dimensioni</h4>
 
                 <Row className="g-3">
-                  <Col xs={12} md={6} lg={3}>
+                  <Col xs={6} md={6} lg={3}>
                     <div className="car-detail-info-box">
                       <span className="car-detail-info-label">Lunghezza</span>
                       <span className="car-detail-info-value">
@@ -390,7 +402,7 @@ const CarDetailPage = () => {
                     </div>
                   </Col>
 
-                  <Col xs={12} md={6} lg={3}>
+                  <Col xs={6} md={6} lg={3}>
                     <div className="car-detail-info-box">
                       <span className="car-detail-info-label">Larghezza</span>
                       <span className="car-detail-info-value">
@@ -399,7 +411,7 @@ const CarDetailPage = () => {
                     </div>
                   </Col>
 
-                  <Col xs={12} md={6} lg={3}>
+                  <Col xs={6} md={6} lg={3}>
                     <div className="car-detail-info-box">
                       <span className="car-detail-info-label">Altezza</span>
                       <span className="car-detail-info-value">
@@ -408,7 +420,7 @@ const CarDetailPage = () => {
                     </div>
                   </Col>
 
-                  <Col xs={12} md={6} lg={3}>
+                  <Col xs={6} md={6} lg={3}>
                     <div className="car-detail-info-box">
                       <span className="car-detail-info-label">Bagagliaio</span>
                       <span className="car-detail-info-value">
