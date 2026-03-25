@@ -4,6 +4,7 @@ import { Card, Form, Button } from "react-bootstrap";
 function VehicleFilters({ filters, setFilters }) {
   const [brands, setBrands] = useState([]);
   const [models, setModels] = useState([]);
+  const [bodyTypes, setBodyTypes] = useState([]);
 
   const colors = [
     "Nero",
@@ -29,9 +30,11 @@ function VehicleFilters({ filters, setFilters }) {
   const minPriceOptions = [
     5000, 10000, 15000, 20000, 25000, 30000, 40000, 50000,
   ];
+
   const maxPriceOptions = [
     10000, 15000, 20000, 25000, 30000, 40000, 50000, 70000, 100000,
   ];
+
   const maxKmOptions = [
     10000, 20000, 30000, 50000, 75000, 100000, 125000, 150000, 200000,
   ];
@@ -42,17 +45,26 @@ function VehicleFilters({ filters, setFilters }) {
   }
 
   useEffect(() => {
-    const fetchBrands = async () => {
+    const fetchInitialData = async () => {
       try {
-        const response = await fetch("http://localhost:3003/brands");
-        const data = await response.json();
-        setBrands(data);
+        const [brandsRes, bodyTypesRes] = await Promise.all([
+          fetch("http://localhost:3003/brands"),
+          fetch("http://localhost:3003/body-types"),
+        ]);
+
+        const [brandsData, bodyTypesData] = await Promise.all([
+          brandsRes.json(),
+          bodyTypesRes.json(),
+        ]);
+
+        setBrands(brandsData);
+        setBodyTypes(bodyTypesData);
       } catch (error) {
-        console.error("Errore caricamento brand:", error);
+        console.error("Errore caricamento filtri iniziali:", error);
       }
     };
 
-    fetchBrands();
+    fetchInitialData();
   }, []);
 
   useEffect(() => {
@@ -88,6 +100,7 @@ function VehicleFilters({ filters, setFilters }) {
       search: "",
       brandId: "",
       modelId: "",
+      bodyTypeId: "",
       color: "",
       fuelType: "",
       minPrice: "",
@@ -128,6 +141,21 @@ function VehicleFilters({ filters, setFilters }) {
                 {models.map((model) => (
                   <option key={model.id} value={model.id}>
                     {model.name}
+                  </option>
+                ))}
+              </Form.Select>
+            </div>
+
+            <div className="filter-item">
+              <Form.Select
+                name="bodyTypeId"
+                value={filters.bodyTypeId || ""}
+                onChange={handleChange}
+              >
+                <option value="">Tutte le carrozzerie</option>
+                {bodyTypes.map((bodyType) => (
+                  <option key={bodyType.id} value={bodyType.id}>
+                    {bodyType.name}
                   </option>
                 ))}
               </Form.Select>
