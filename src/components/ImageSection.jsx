@@ -4,7 +4,7 @@ const ImageSection = () => {
   return (
     <section className="hero-section">
       <img
-        src="public/images/HomeImage.png"
+        src="public/images/LogoFn.png"
         alt="DriveClick Auto"
         className="hero-img"
       />
