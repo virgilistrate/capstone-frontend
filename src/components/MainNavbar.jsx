@@ -3,11 +3,25 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Button from "react-bootstrap/Button";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import "../App.css";
 
-function MainNavbar({ isLoggedIn = false, user = null, onLogout = null }) {
+function MainNavbar() {
+  const navigate = useNavigate();
+
+  const token = localStorage.getItem("token");
+  const savedUser = localStorage.getItem("user");
+  const user = savedUser ? JSON.parse(savedUser) : null;
+  const isLoggedIn = !!token;
+
   const userDisplayName = user?.name || "Profilo";
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("role");
+    localStorage.removeItem("user");
+    navigate("/");
+  };
 
   return (
     <Navbar expand="lg" className="main-navbar py-2" sticky="top">
@@ -48,7 +62,7 @@ function MainNavbar({ isLoggedIn = false, user = null, onLogout = null }) {
               Home
             </Nav.Link>
 
-            <Nav.Link as={NavLink} to="/Cars" className="main-nav-link">
+            <Nav.Link as={NavLink} to="/cars" className="main-nav-link">
               Tutte le auto
             </Nav.Link>
 
@@ -65,20 +79,20 @@ function MainNavbar({ isLoggedIn = false, user = null, onLogout = null }) {
               id="main-navbar-dropdown"
               className="main-nav-dropdown"
             >
-              <NavDropdown.Item as={Link} to="/Cars?bodyTypeId=1">
+              <NavDropdown.Item as={Link} to="/cars?bodyTypeId=1">
                 SUV
               </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/Cars?bodyTypeId=2">
+              <NavDropdown.Item as={Link} to="/cars?bodyTypeId=2">
                 Station Wagon
               </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/Cars?bodyTypeId=3">
+              <NavDropdown.Item as={Link} to="/cars?bodyTypeId=3">
                 Berlina
               </NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item as={Link} to="/Cars?fuelType=Ibrida">
+              <NavDropdown.Item as={Link} to="/cars?fuelType=Ibrida">
                 Ibride
               </NavDropdown.Item>
-              <NavDropdown.Item as={Link} to="/Cars?fuelType=Elettrica">
+              <NavDropdown.Item as={Link} to="/cars?fuelType=Elettrica">
                 Elettriche
               </NavDropdown.Item>
             </NavDropdown>
@@ -151,13 +165,18 @@ function MainNavbar({ isLoggedIn = false, user = null, onLogout = null }) {
                   Preferiti
                 </NavDropdown.Item>
 
+                {user?.role === "ADMIN" && (
+                  <>
+                    <NavDropdown.Divider />
+                    <NavDropdown.Item as={Link} to="/admin">
+                      Area admin
+                    </NavDropdown.Item>
+                  </>
+                )}
+
                 <NavDropdown.Divider />
 
-                <NavDropdown.Item
-                  onClick={() => {
-                    if (onLogout) onLogout();
-                  }}
-                >
+                <NavDropdown.Item onClick={handleLogout}>
                   Logout
                 </NavDropdown.Item>
               </NavDropdown>

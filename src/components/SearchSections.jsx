@@ -14,11 +14,11 @@ export default function SearchSections() {
 
   const brands = [
     { name: "Mercedes", img: "/images/MERCEDES.png", brandId: 1 },
-    { name: "Audi", img: "/images/AUDI.png", brandId: 2 },
-    { name: "BMW", img: "/images/BMW.png", brandId: 3 },
-    { name: "Volkswagen", img: "/images/VOLSKWAGEN.png", brandId: 4 },
-    { name: "Fiat", img: "/images/FIAT.jpg", brandId: 5 },
-    { name: "Toyota", img: "/images/TOYOTA.jpg", brandId: 6 },
+    { name: "Audi", img: "/images/AUDI.png", brandId: 3 },
+    { name: "BMW", img: "/images/BMW.png", brandId: 2 },
+    { name: "Volkswagen", img: "/images/VOLSKWAGEN.png", brandId: 6 },
+    { name: "Fiat", img: "/images/FIAT.jpg", brandId: 4 },
+    { name: "Toyota", img: "/images/TOYOTA.jpg", brandId: 7 },
   ];
 
   return (
