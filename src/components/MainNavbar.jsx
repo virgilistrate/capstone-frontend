@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
@@ -9,17 +10,39 @@ import "../App.css";
 function MainNavbar() {
   const navigate = useNavigate();
 
-  const token = localStorage.getItem("token");
-  const savedUser = localStorage.getItem("user");
-  const user = savedUser ? JSON.parse(savedUser) : null;
-  const isLoggedIn = !!token;
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [user, setUser] = useState(() => {
+    const savedUser = localStorage.getItem("user");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
 
+  useEffect(() => {
+    const syncAuthState = () => {
+      const savedToken = localStorage.getItem("token");
+      const savedUser = localStorage.getItem("user");
+
+      setToken(savedToken);
+      setUser(savedUser ? JSON.parse(savedUser) : null);
+    };
+
+    window.addEventListener("storage", syncAuthState);
+    window.addEventListener("auth-changed", syncAuthState);
+
+    return () => {
+      window.removeEventListener("storage", syncAuthState);
+      window.removeEventListener("auth-changed", syncAuthState);
+    };
+  }, []);
+
+  const isLoggedIn = !!token;
   const userDisplayName = user?.name || "Profilo";
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("role");
     localStorage.removeItem("user");
+
+    window.dispatchEvent(new Event("auth-changed"));
     navigate("/");
   };
 
@@ -155,10 +178,6 @@ function MainNavbar() {
 
                 <NavDropdown.Item as={Link} to="/profilo">
                   Il mio profilo
-                </NavDropdown.Item>
-
-                <NavDropdown.Item as={Link} to="/miei-ordini">
-                  I miei ordini
                 </NavDropdown.Item>
 
                 <NavDropdown.Item as={Link} to="/preferiti">

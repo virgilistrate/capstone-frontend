@@ -9,12 +9,16 @@ import AdminHistoryPage from "./pages/AdminHistoryPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import AdminLoginPage from "./pages/AdminLoginPage";
+import ProfilePage from "./pages/ProfilePage";
+import FavoritesPage from "./pages/FavoritesPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PurchasePage from "./pages/PurchasePage";
+import AppointmentPage from "./pages/AppointmentPage";
+import FakePaymentPage from "./pages/FakePaymentPage";
 
 function App() {
   return (
     <Routes>
-      {/* pubbliche */}
       <Route path="/" element={<HomePage />} />
       <Route path="/cars" element={<AllCarsPage />} />
       <Route path="/warranty" element={<WarrantyPage />} />
@@ -24,7 +28,24 @@ function App() {
       <Route path="/register" element={<RegisterPage />} />
       <Route path="/admin/login" element={<AdminLoginPage />} />
 
-      {/* admin protette */}
+      <Route
+        path="/profilo"
+        element={
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/preferiti"
+        element={
+          <ProtectedRoute>
+            <FavoritesPage />
+          </ProtectedRoute>
+        }
+      />
+
       <Route
         path="/admin"
         element={
@@ -39,6 +60,31 @@ function App() {
         element={
           <ProtectedRoute allowedRole="ADMIN">
             <AdminHistoryPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/purchase/:id"
+        element={
+          <ProtectedRoute>
+            <PurchasePage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/appointment/:id"
+        element={
+          <ProtectedRoute>
+            <AppointmentPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/payment/:id"
+        element={
+          <ProtectedRoute>
+            <FakePaymentPage />
           </ProtectedRoute>
         }
       />

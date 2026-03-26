@@ -21,6 +21,7 @@ const CarDetailPage = () => {
   const [activeImg, setActiveImg] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const [downPayment, setDownPayment] = useState(3000);
   const [months, setMonths] = useState(48);
@@ -51,6 +52,19 @@ const CarDetailPage = () => {
     fetchCar();
   }, [id]);
 
+  useEffect(() => {
+    if (!car) return;
+
+    const storedFavorites = JSON.parse(
+      localStorage.getItem("favorites") || "[]",
+    );
+    const alreadyFavorite = storedFavorites.some(
+      (favoriteCar) => Number(favoriteCar.id) === Number(car.id),
+    );
+
+    setIsFavorite(alreadyFavorite);
+  }, [car]);
+
   const images = useMemo(() => {
     if (!car?.images || car.images.length === 0) {
       return [
@@ -71,6 +85,7 @@ const CarDetailPage = () => {
     (car?.price || 0) - Number(downPayment || 0),
     0,
   );
+
   const monthlyInstallment = useMemo(() => {
     const principal = financedAmount;
     const monthlyRate = Number(rate) / 100 / 12;
@@ -83,6 +98,38 @@ const CarDetailPage = () => {
       (principal * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -totalMonths))
     );
   }, [financedAmount, months, rate]);
+
+  const handleAddToFavorites = () => {
+    if (!car) return;
+
+    const storedFavorites = JSON.parse(
+      localStorage.getItem("favorites") || "[]",
+    );
+
+    const alreadyExists = storedFavorites.some(
+      (favoriteCar) => Number(favoriteCar.id) === Number(car.id),
+    );
+
+    if (alreadyExists) {
+      setIsFavorite(true);
+      return;
+    }
+
+    const favoriteCar = {
+      id: car.id,
+      brand: car.brand?.name || "Brand",
+      model: car.model?.name || "Model",
+      price: car.price || 0,
+      year: car.yearOfConstruction || null,
+      mileage: car.kilometers || 0,
+      fuel: car.fuelType || "N/D",
+      image: images[0]?.imageUrl || fallbackImage,
+    };
+
+    const updatedFavorites = [...storedFavorites, favoriteCar];
+    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+    setIsFavorite(true);
+  };
 
   if (loading) {
     return (
@@ -121,7 +168,6 @@ const CarDetailPage = () => {
         </div>
 
         <Row className="g-4 align-items-start">
-          {/* IMMAGINI GRANDI */}
           <Col xs={12} lg={8}>
             <div className="car-detail-main-image-box car-detail-main-image-box-large">
               <img
@@ -158,7 +204,6 @@ const CarDetailPage = () => {
             )}
           </Col>
 
-          {/* COLONNA DESTRA */}
           <Col xs={12} lg={4}>
             <Card className="border-0 shadow-sm rounded-4 mb-4">
               <Card.Body>
@@ -182,13 +227,32 @@ const CarDetailPage = () => {
                 </div>
 
                 <div className="d-flex gap-2 flex-wrap">
-                  <Button variant="primary">Contatta concessionaria</Button>
-                  <Button variant="outline-primary">Prenota test drive</Button>
+                  <Button
+                    as={Link}
+                    to={`/purchase/${car.id}`}
+                    variant="primary"
+                  >
+                    Acquista online
+                  </Button>
+
+                  <Button
+                    as={Link}
+                    to={`/appointment/${car.id}`}
+                    variant="outline-primary"
+                  >
+                    Prendi appuntamento in concessionaria
+                  </Button>
+
+                  <Button
+                    variant={isFavorite ? "success" : "outline-dark"}
+                    onClick={handleAddToFavorites}
+                  >
+                    {isFavorite ? "Già nei preferiti" : "Aggiungi ai preferiti"}
+                  </Button>
                 </div>
               </Card.Body>
             </Card>
 
-            {/* SIMULAZIONE FINANZIAMENTO */}
             <Card className="border-0 shadow-sm rounded-4">
               <Card.Body>
                 <h4 className="mb-3">Simula il finanziamento</h4>
@@ -252,7 +316,6 @@ const CarDetailPage = () => {
           </Col>
         </Row>
 
-        {/* INFORMAZIONI PRINCIPALI SOTTO */}
         <Row className="mt-4">
           <Col xs={12}>
             <Card className="border-0 shadow-sm rounded-4">
@@ -339,7 +402,6 @@ const CarDetailPage = () => {
           </Col>
         </Row>
 
-        {/* DETTAGLI TECNICI */}
         <Row className="mt-4">
           <Col xs={12}>
             <Card className="border-0 shadow-sm rounded-4">
@@ -385,7 +447,6 @@ const CarDetailPage = () => {
           </Col>
         </Row>
 
-        {/* DIMENSIONI */}
         <Row className="mt-4">
           <Col xs={12}>
             <Card className="border-0 shadow-sm rounded-4">

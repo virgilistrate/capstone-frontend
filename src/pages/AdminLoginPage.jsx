@@ -9,7 +9,7 @@ import {
   Alert,
 } from "react-bootstrap";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function AdminLoginPage() {
   const [formData, setFormData] = useState({
@@ -47,17 +47,22 @@ export default function AdminLoginPage() {
         },
       );
 
-      if (profileResponse.data.role !== "ADMIN") {
+      const user = profileResponse.data;
+
+      if (user.role !== "ADMIN") {
         setError("Non sei autorizzato ad accedere all'area admin");
         return;
       }
 
       localStorage.setItem("token", token);
-      localStorage.setItem("role", profileResponse.data.role);
+      localStorage.setItem("role", user.role);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      window.dispatchEvent(new Event("auth-changed"));
 
       navigate("/admin");
-    } catch {
-      setError("Accesso admin non consentito");
+    } catch (err) {
+      setError(err.response?.data || "Accesso admin non consentito");
     }
   };
 
@@ -98,6 +103,10 @@ export default function AdminLoginPage() {
                   Accedi come admin
                 </Button>
               </Form>
+
+              <div className="text-center mt-3">
+                <Link to="/login">Torna al login utente</Link>
+              </div>
             </Card.Body>
           </Card>
         </Col>

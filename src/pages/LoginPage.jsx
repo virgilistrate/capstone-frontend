@@ -9,7 +9,7 @@ import {
   Alert,
 } from "react-bootstrap";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -32,15 +32,32 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const response = await axios.post(
+      const loginResponse = await axios.post(
         "http://localhost:3003/auth/login",
         formData,
       );
+      const token = loginResponse.data.token;
 
-      localStorage.setItem("token", response.data.token);
+      const profileResponse = await axios.get(
+        "http://localhost:3003/profile/me",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const user = profileResponse.data;
+
+      localStorage.setItem("token", token);
+      localStorage.setItem("role", user.role);
+      localStorage.setItem("user", JSON.stringify(user));
+
+      window.dispatchEvent(new Event("auth-changed"));
+
       navigate("/");
-    } catch {
-      setError("Credenziali errate");
+    } catch (err) {
+      setError(err.response?.data || "Credenziali errate");
     }
   };
 
@@ -81,6 +98,10 @@ export default function LoginPage() {
                   Accedi
                 </Button>
               </Form>
+
+              <div className="text-center mt-3">
+                Non hai un account? <Link to="/register">Registrati</Link>
+              </div>
             </Card.Body>
           </Card>
         </Col>
