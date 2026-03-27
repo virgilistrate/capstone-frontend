@@ -75,6 +75,25 @@ export default function PurchasePage() {
   }, [financedAmount, months]);
 
   const handleGoToPayment = () => {
+    if (car?.sold) {
+      alert("Questo veicolo è già stato venduto.");
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+
+    if (!token || !user) {
+      alert("Devi effettuare il login come cliente per acquistare.");
+      navigate("/login");
+      return;
+    }
+
+    if (user.role !== "CLIENT") {
+      alert("Solo un cliente può completare un acquisto.");
+      return;
+    }
+
     const purchaseData = {
       vehicleId: car?.id,
       vehicleName: `${car?.brand?.name || ""} ${car?.model?.name || ""}`.trim(),
@@ -156,6 +175,13 @@ export default function PurchasePage() {
                   <p className="text-secondary mb-4">
                     Configura il tuo acquisto e completa il pagamento.
                   </p>
+
+                  {car.sold && !purchaseCompleted && (
+                    <Alert variant="danger">
+                      Questo veicolo risulta già venduto e non è più
+                      acquistabile.
+                    </Alert>
+                  )}
 
                   {!purchaseCompleted ? (
                     <Form>
@@ -286,6 +312,7 @@ export default function PurchasePage() {
                         variant="dark"
                         className="rounded-pill px-4"
                         onClick={handleGoToPayment}
+                        disabled={car.sold}
                       >
                         Vai al pagamento
                       </Button>

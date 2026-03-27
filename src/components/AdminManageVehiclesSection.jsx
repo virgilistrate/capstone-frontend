@@ -25,16 +25,6 @@ export default function AdminManageVehiclesSection() {
   const [sedi, setSedi] = useState([]);
   const [optionals, setOptionals] = useState([]);
 
-  const [showMaintenanceModal, setShowMaintenanceModal] = useState(false);
-  const [selectedVehicleId, setSelectedVehicleId] = useState(null);
-  const [maintenanceSaving, setMaintenanceSaving] = useState(false);
-
-  const [maintenanceData, setMaintenanceData] = useState({
-    type: "",
-    date: "",
-    km: "",
-  });
-
   const [showEditModal, setShowEditModal] = useState(false);
   const [editSaving, setEditSaving] = useState(false);
 
@@ -204,62 +194,6 @@ export default function AdminManageVehiclesSection() {
     } catch (error) {
       console.error(error);
       setErrorMessage("Non sono riuscito ad aggiornare lo stato del veicolo.");
-    }
-  };
-
-  const openMaintenanceModal = (vehicleId) => {
-    setSelectedVehicleId(vehicleId);
-    setMaintenanceData({
-      type: "",
-      date: "",
-      km: "",
-    });
-    clearMessages();
-    setShowMaintenanceModal(true);
-  };
-
-  const handleMaintenanceSubmit = async (e) => {
-    e.preventDefault();
-    clearMessages();
-    setMaintenanceSaving(true);
-
-    try {
-      const payload = {
-        vehicleId: Number(selectedVehicleId),
-        type: maintenanceData.type,
-        date: maintenanceData.date,
-        km: Number(maintenanceData.km),
-      };
-
-      console.log("PAYLOAD MANUTENZIONE:", payload);
-
-      const response = await fetch("http://localhost:3003/maintenances", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        throw new Error("Errore nel salvataggio manutenzione");
-      }
-
-      await response.json();
-
-      setShowMaintenanceModal(false);
-      setSuccessMessage("Manutenzione aggiunta con successo.");
-      setMaintenanceData({
-        type: "",
-        date: "",
-        km: "",
-      });
-      fetchVehicles();
-    } catch (error) {
-      console.error(error);
-      setErrorMessage("Non sono riuscito ad aggiungere la manutenzione.");
-    } finally {
-      setMaintenanceSaving(false);
     }
   };
 
@@ -458,7 +392,7 @@ export default function AdminManageVehiclesSection() {
               <h2 className="fw-bold mb-1">Gestisci veicoli</h2>
               <p className="text-muted mb-0">
                 Modifica dati, disponibilità, immagini, optional ed elimina
-                veicoli o registra manutenzioni.
+                veicoli.
               </p>
             </div>
 
@@ -530,13 +464,6 @@ export default function AdminManageVehiclesSection() {
                           </Button>
 
                           <Button
-                            variant="outline-primary"
-                            onClick={() => openMaintenanceModal(vehicle.id)}
-                          >
-                            Aggiungi manutenzione
-                          </Button>
-
-                          <Button
                             variant="outline-danger"
                             onClick={() => handleDelete(vehicle.id)}
                           >
@@ -551,90 +478,6 @@ export default function AdminManageVehiclesSection() {
             )}
           </Card.Body>
         </Card>
-
-        <Modal
-          show={showMaintenanceModal}
-          onHide={() => setShowMaintenanceModal(false)}
-          centered
-        >
-          <Modal.Header closeButton>
-            <Modal.Title>Aggiungi manutenzione</Modal.Title>
-          </Modal.Header>
-
-          <Form onSubmit={handleMaintenanceSubmit}>
-            <Modal.Body>
-              <Form.Group className="mb-3">
-                <Form.Label>Tipo manutenzione</Form.Label>
-                <Form.Select
-                  value={maintenanceData.type}
-                  onChange={(e) =>
-                    setMaintenanceData((prev) => ({
-                      ...prev,
-                      type: e.target.value,
-                    }))
-                  }
-                  required
-                >
-                  <option value="">Seleziona tipo</option>
-                  <option value="TAGLIANDO">Tagliando</option>
-                  <option value="REVISIONE">Revisione</option>
-                  <option value="CAMBIO_OLIO">Cambio olio</option>
-                  <option value="CAMBIO_GOMME">Cambio gomme</option>
-                  <option value="RIPARAZIONE">Riparazione</option>
-                </Form.Select>
-              </Form.Group>
-
-              <Form.Group className="mb-3">
-                <Form.Label>Data</Form.Label>
-                <Form.Control
-                  type="date"
-                  value={maintenanceData.date}
-                  onChange={(e) =>
-                    setMaintenanceData((prev) => ({
-                      ...prev,
-                      date: e.target.value,
-                    }))
-                  }
-                  required
-                />
-              </Form.Group>
-
-              <Form.Group className="mb-3">
-                <Form.Label>
-                  Km del veicolo al momento della manutenzione
-                </Form.Label>
-                <Form.Control
-                  type="number"
-                  min="0"
-                  value={maintenanceData.km}
-                  onChange={(e) =>
-                    setMaintenanceData((prev) => ({
-                      ...prev,
-                      km: e.target.value,
-                    }))
-                  }
-                  required
-                />
-              </Form.Group>
-            </Modal.Body>
-
-            <Modal.Footer>
-              <Button
-                variant="secondary"
-                onClick={() => setShowMaintenanceModal(false)}
-              >
-                Chiudi
-              </Button>
-              <Button
-                variant="primary"
-                type="submit"
-                disabled={maintenanceSaving}
-              >
-                {maintenanceSaving ? "Salvataggio..." : "Salva manutenzione"}
-              </Button>
-            </Modal.Footer>
-          </Form>
-        </Modal>
 
         <Modal show={showEditModal} onHide={closeEditModal} size="xl" centered>
           <Modal.Header closeButton>

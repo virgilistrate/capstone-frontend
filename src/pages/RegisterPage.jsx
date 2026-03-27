@@ -18,6 +18,8 @@ export default function RegisterPage() {
     email: "",
     password: "",
     phoneNumber: "",
+    indirizzo: "",
+    codiceFiscale: "",
   });
 
   const [error, setError] = useState("");
@@ -46,8 +48,12 @@ export default function RegisterPage() {
     } catch (err) {
       if (Array.isArray(err.response?.data)) {
         setError(err.response.data.join(" - "));
+      } else if (typeof err.response?.data === "string") {
+        setError(err.response.data);
+      } else if (err.response?.data?.message) {
+        setError(err.response.data.message);
       } else {
-        setError(err.response?.data || "Registrazione fallita");
+        setError("Registrazione fallita");
       }
     }
   };
@@ -114,6 +120,28 @@ export default function RegisterPage() {
                     type="text"
                     name="phoneNumber"
                     value={formData.phoneNumber}
+                    onChange={handleChange}
+                    required
+                  />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Indirizzo</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="indirizzo"
+                    value={formData.indirizzo}
+                    onChange={handleChange}
+                    required
+                  />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>Codice fiscale</Form.Label>
+                  <Form.Control
+                    type="text"
+                    name="codiceFiscale"
+                    value={formData.codiceFiscale}
                     onChange={handleChange}
                     required
                   />

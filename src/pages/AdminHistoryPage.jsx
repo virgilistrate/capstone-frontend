@@ -13,7 +13,7 @@ import MainNavbar from "../components/MainNavbar";
 export default function AdminHistoryPage() {
   const [soldVehicles, setSoldVehicles] = useState([]);
   const [orders, setOrders] = useState([]);
-  const [finanziamenti, setFinanziamenti] = useState([]);
+
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -22,10 +22,16 @@ export default function AdminHistoryPage() {
       setLoading(true);
       setErrorMessage("");
 
+      const token = localStorage.getItem("token");
+
       try {
         const [vehiclesRes, ordersRes, finanziamentiRes] = await Promise.all([
           fetch("http://localhost:3003/vehicles"),
-          fetch("http://localhost:3003/orders"),
+          fetch("http://localhost:3003/orders", {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
           fetch("http://localhost:3003/finanziamenti"),
         ]);
 
@@ -43,13 +49,11 @@ export default function AdminHistoryPage() {
 
         const vehiclesData = await vehiclesRes.json();
         const ordersData = await ordersRes.json();
-        const finanziamentiData = await finanziamentiRes.json();
 
         setSoldVehicles(
           vehiclesData.filter((vehicle) => vehicle.sold === true),
         );
         setOrders(ordersData);
-        setFinanziamenti(finanziamentiData);
       } catch (error) {
         console.error(error);
         setErrorMessage("Errore nel caricamento dello storico.");
@@ -87,7 +91,7 @@ export default function AdminHistoryPage() {
         {errorMessage && <Alert variant="danger">{errorMessage}</Alert>}
 
         <Row className="g-4">
-          <Col xs={12} lg={4}>
+          <Col xs={12} lg={6}>
             <Card className="border-0 shadow-sm rounded-4 h-100">
               <Card.Body>
                 <h4 className="mb-3">Veicoli venduti</h4>
@@ -117,7 +121,7 @@ export default function AdminHistoryPage() {
             </Card>
           </Col>
 
-          <Col xs={12} lg={4}>
+          <Col xs={12} lg={6}>
             <Card className="border-0 shadow-sm rounded-4 h-100">
               <Card.Body>
                 <h4 className="mb-3">Ordini</h4>
@@ -141,49 +145,6 @@ export default function AdminHistoryPage() {
                       <div>
                         Cliente: {order.client?.user?.name || "N/D"}{" "}
                         {order.client?.user?.surname || ""}
-                      </div>
-
-                      <div>
-                        Consulente: {order.consulente?.user?.name || "N/D"}{" "}
-                        {order.consulente?.user?.surname || ""}
-                      </div>
-                    </div>
-                  ))
-                )}
-              </Card.Body>
-            </Card>
-          </Col>
-
-          <Col xs={12} lg={4}>
-            <Card className="border-0 shadow-sm rounded-4 h-100">
-              <Card.Body>
-                <h4 className="mb-3">Finanziamenti</h4>
-
-                {finanziamenti.length === 0 ? (
-                  <p className="text-muted mb-0">
-                    Nessun finanziamento presente.
-                  </p>
-                ) : (
-                  finanziamenti.map((fin) => (
-                    <div key={fin.id} className="mb-3 pb-3 border-bottom">
-                      <strong>Finanziamento #{fin.id}</strong>
-
-                      <div>
-                        Importo: €{" "}
-                        {fin.amount?.toLocaleString("it-IT") || "N/D"}
-                      </div>
-
-                      <div>Rate: {fin.numberOfRates || "N/D"}</div>
-
-                      <div>Rata mensile: € {fin.monthlyRate || "N/D"}</div>
-
-                      <div className="text-muted">
-                        Ordine collegato: #{fin.order?.id || "N/D"}
-                      </div>
-
-                      <div>
-                        Veicolo: {fin.order?.vehicle?.brand?.name || ""}{" "}
-                        {fin.order?.vehicle?.model?.name || ""}
                       </div>
                     </div>
                   ))

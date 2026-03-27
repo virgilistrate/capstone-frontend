@@ -24,6 +24,7 @@ export default function FakePaymentPage() {
   const [expiryDate, setExpiryDate] = useState("");
   const [cvv, setCvv] = useState("");
   const [paymentApproved, setPaymentApproved] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const amountLabel = useMemo(() => {
     if (!purchaseData) return "€ 0";
@@ -43,18 +44,74 @@ export default function FakePaymentPage() {
     }).format(purchaseData.price || 0);
   }, [purchaseData]);
 
-  const handleFakePayment = (e) => {
+  const handleFakePayment = async (e) => {
     e.preventDefault();
-    setPaymentApproved(true);
+    setErrorMessage("");
 
-    setTimeout(() => {
-      navigate(`/purchase/${id}`, {
-        state: {
-          paymentSuccess: true,
-          purchaseData,
+    const token = localStorage.getItem("token");
+
+    let user = null;
+    try {
+      const storedUser = localStorage.getItem("user");
+      user = storedUser ? JSON.parse(storedUser) : null;
+    } catch (error) {
+      console.error("Utente salvato in localStorage non valido:", error);
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      localStorage.removeItem("role");
+      setErrorMessage("Sessione non valida. Effettua di nuovo il login.");
+      return;
+    }
+
+    if (!token || !user) {
+      setErrorMessage(
+        "Devi effettuare il login prima di completare l'acquisto.",
+      );
+      return;
+    }
+
+    if (user.role !== "CLIENT") {
+      setErrorMessage("Solo un cliente può completare un acquisto.");
+      return;
+    }
+
+    try {
+      setPaymentApproved(true);
+
+      const response = await fetch("http://localhost:3003/orders/purchase", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
+        body: JSON.stringify({
+          vehicleId: Number(purchaseData.vehicleId),
+        }),
       });
-    }, 1200);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || "Errore durante la creazione dell'ordine");
+      }
+
+      const createdOrder = await response.json();
+
+      setTimeout(() => {
+        navigate(`/purchase/${id}`, {
+          state: {
+            paymentSuccess: true,
+            purchaseData,
+            orderData: createdOrder,
+          },
+        });
+      }, 1200);
+    } catch (error) {
+      console.error(error);
+      setPaymentApproved(false);
+      setErrorMessage(
+        error.message || "Non sono riuscito a completare l'acquisto.",
+      );
+    }
   };
 
   if (!purchaseData) {
@@ -103,6 +160,10 @@ export default function FakePaymentPage() {
                     Questa è una schermata demo: il pagamento verrà approvato
                     automaticamente.
                   </p>
+
+                  {errorMessage && (
+                    <Alert variant="danger">{errorMessage}</Alert>
+                  )}
 
                   {!paymentApproved ? (
                     <Form onSubmit={handleFakePayment}>
